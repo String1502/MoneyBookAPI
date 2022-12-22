@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MoneyBookApiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Accounts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Username" Type="varchar" MaxLength="255" />
+    <Property Name="Password" Type="varchar" MaxLength="255" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="Phone" Type="varchar" MaxLength="16" />
+    <Property Name="Email" Type="varchar" MaxLength="255" />
+    <Property Name="Birth" Type="date" />
+    <Property Name="Created" Type="datetime2" Precision="3" />
+    <Property Name="Modified" Type="datetime2" Precision="3" />
+    <Property Name="IsDeleted" Type="int" />
+  </EntityType>
+  <EntityType Name="Acquaintance_Transaction">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AcquaintanceId" Type="int" />
+    <Property Name="TransactionId" Type="int" />
+    <Property Name="Created" Type="datetime2" Precision="3" />
+    <Property Name="Modified" Type="datetime2" Precision="3" />
+    <Property Name="IsDeleted" Type="int" />
+  </EntityType>
+  <EntityType Name="Acquaintances">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="int" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="Created" Type="datetime2" Precision="3" />
+    <Property Name="Modified" Type="datetime2" Precision="3" />
+    <Property Name="IsDeleted" Type="int" />
+  </EntityType>
+  <EntityType Name="Currencies">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="Code" Type="varchar" MaxLength="16" />
+    <Property Name="Created" Type="datetime2" Precision="3" />
+    <Property Name="Modified" Type="datetime2" Precision="3" />
+    <Property Name="IsDeleted" Type="int" />
+  </EntityType>
+  <EntityType Name="Events">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="int" />
+    <Property Name="IconId" Type="int" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="ExpiredDate" Type="date" />
+    <Property Name="Created" Type="datetime2" Precision="3" />
+    <Property Name="Modified" Type="datetime2" Precision="3" />
+    <Property Name="IsDeleted" Type="int" />
+  </EntityType>
+  <EntityType Name="Icons">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="Code" Type="varchar" MaxLength="32" />
+    <Property Name="ImageUrl" Type="varchar" MaxLength="128" />
+    <Property Name="Created" Type="datetime2" Precision="3" />
+    <Property Name="Modified" Type="datetime2" Precision="3" />
+    <Property Name="IsDeleted" Type="int" />
+  </EntityType>
+  <EntityType Name="Transactions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="WalletId" Type="int" />
+    <Property Name="TypeId" Type="int" />
+    <Property Name="EventId" Type="int" />
+    <Property Name="Amount" Type="int" />
+    <Property Name="Note" Type="nvarchar" MaxLength="2048" />
+    <Property Name="Date" Type="date" />
+    <Property Name="Created" Type="datetime2" Precision="3" />
+    <Property Name="Modified" Type="datetime2" Precision="3" />
+    <Property Name="IsDeleted" Type="int" />
+  </EntityType>
+  <EntityType Name="TransactionTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="int" />
+    <Property Name="IconId" Type="int" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="IsExpense" Type="int" />
+    <Property Name="IsDefault" Type="int" />
+    <Property Name="Tag" Type="nvarchar" MaxLength="128" />
+    <Property Name="Created" Type="datetime2" Precision="3" />
+    <Property Name="Modified" Type="datetime2" Precision="3" />
+    <Property Name="IsDeleted" Type="int" />
+  </EntityType>
+  <EntityType Name="Wallets">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CurrencyId" Type="int" />
+    <Property Name="AccountId" Type="int" />
+    <Property Name="IconId" Type="int" />
+    <Property Name="Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="Balance" Type="int" />
+    <Property Name="Created" Type="datetime2" Precision="3" />
+    <Property Name="Modified" Type="datetime2" Precision="3" />
+    <Property Name="IsDeleted" Type="int" />
+  </EntityType>
+  <Association Name="FK_Acquaintance_Transaction_Acquaintance">
+    <End Role="Acquaintances" Type="Self.Acquaintances" Multiplicity="0..1" />
+    <End Role="Acquaintance_Transaction" Type="Self.Acquaintance_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Acquaintances">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Acquaintance_Transaction">
+        <PropertyRef Name="AcquaintanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Acquaintance_Transaction_Transaction">
+    <End Role="Transactions" Type="Self.Transactions" Multiplicity="0..1" />
+    <End Role="Acquaintance_Transaction" Type="Self.Acquaintance_Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Transactions">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Acquaintance_Transaction">
+        <PropertyRef Name="TransactionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Acquaintances_Account">
+    <End Role="Accounts" Type="Self.Accounts" Multiplicity="0..1" />
+    <End Role="Acquaintances" Type="Self.Acquaintances" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Acquaintances">
+        <PropertyRef Name="AccountId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Events_Account">
+    <End Role="Accounts" Type="Self.Accounts" Multiplicity="0..1" />
+    <End Role="Events" Type="Self.Events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Events">
+        <PropertyRef Name="AccountId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Events_Icon">
+    <End Role="Icons" Type="Self.Icons" Multiplicity="0..1" />
+    <End Role="Events" Type="Self.Events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Icons">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Events">
+        <PropertyRef Name="IconId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Transactions_Event">
+    <End Role="Events" Type="Self.Events" Multiplicity="0..1" />
+    <End Role="Transactions" Type="Self.Transactions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Events">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Transactions">
+        <PropertyRef Name="EventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Transactions_Type">
+    <End Role="TransactionTypes" Type="Self.TransactionTypes" Multiplicity="0..1" />
+    <End Role="Transactions" Type="Self.Transactions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TransactionTypes">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Transactions">
+        <PropertyRef Name="TypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Transactions_Wallet">
+    <End Role="Wallets" Type="Self.Wallets" Multiplicity="0..1" />
+    <End Role="Transactions" Type="Self.Transactions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Wallets">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Transactions">
+        <PropertyRef Name="WalletId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TransactionTypes_Account">
+    <End Role="Accounts" Type="Self.Accounts" Multiplicity="0..1" />
+    <End Role="TransactionTypes" Type="Self.TransactionTypes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TransactionTypes">
+        <PropertyRef Name="AccountId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TransactionTypes_Icon">
+    <End Role="Icons" Type="Self.Icons" Multiplicity="0..1" />
+    <End Role="TransactionTypes" Type="Self.TransactionTypes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Icons">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TransactionTypes">
+        <PropertyRef Name="IconId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Wallets_Account">
+    <End Role="Accounts" Type="Self.Accounts" Multiplicity="0..1" />
+    <End Role="Wallets" Type="Self.Wallets" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Wallets">
+        <PropertyRef Name="AccountId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Wallets_Currency">
+    <End Role="Currencies" Type="Self.Currencies" Multiplicity="0..1" />
+    <End Role="Wallets" Type="Self.Wallets" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Currencies">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Wallets">
+        <PropertyRef Name="CurrencyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Wallets_Icon">
+    <End Role="Icons" Type="Self.Icons" Multiplicity="0..1" />
+    <End Role="Wallets" Type="Self.Wallets" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Icons">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Wallets">
+        <PropertyRef Name="IconId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="PROC_CreateAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="username" Type="varchar" Mode="In" />
+    <Parameter Name="password" Type="varchar" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="phone" Type="varchar" Mode="In" />
+    <Parameter Name="email" Type="varchar" Mode="In" />
+    <Parameter Name="birth" Type="date" Mode="In" />
+  </Function>
+  <Function Name="PROC_CreateAcquaintance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_CreateAcquaintance_Transaction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="acquaintanceId" Type="int" Mode="In" />
+    <Parameter Name="transactionId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_CreateCurrency" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="code" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_CreateEvent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="int" Mode="In" />
+    <Parameter Name="iconId" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="expiredDate" Type="date" Mode="In" />
+  </Function>
+  <Function Name="PROC_CreateIcon" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="code" Type="varchar" Mode="In" />
+    <Parameter Name="imageUrl" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_CreateTransaction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="walletId" Type="int" Mode="In" />
+    <Parameter Name="typeId" Type="int" Mode="In" />
+    <Parameter Name="eventId" Type="int" Mode="In" />
+    <Parameter Name="amount" Type="int" Mode="In" />
+    <Parameter Name="note" Type="nvarchar" Mode="In" />
+    <Parameter Name="date" Type="date" Mode="In" />
+  </Function>
+  <Function Name="PROC_CreateTransactionType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="int" Mode="In" />
+    <Parameter Name="iconId" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="isExpense" Type="int" Mode="In" />
+    <Parameter Name="isDefault" Type="int" Mode="In" />
+    <Parameter Name="tag" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_CreateWallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="currencyId" Type="int" Mode="In" />
+    <Parameter Name="accountId" Type="int" Mode="In" />
+    <Parameter Name="iconId" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="balance" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteAcquaintance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteAcquaintance_Transaction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteAcquaintance_Transaction_All" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="transactionId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteCurrency" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteEvent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteIcon" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteTransaction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteTransactionAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="walletId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteTransactionTypes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_DeleteWallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="walletId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetAccountById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetAccountByUsername" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="username" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetAcquaintance_TransactionById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetAcquaintance_TransactionByTransactionId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="transactionId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetAcquaintance_TransactionIdByTransactionId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="transactionId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetAcquaintanceById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetAcquaintancesByAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetAllAccounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllAcquaintance_Transaction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllAcquaintance_TransactionId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllAcquaintances" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllCurrencies" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllEvents" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllIcons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllTransactions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllTransactionsId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllTransactionTypes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetAllWallets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetCurrencyByCode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="code" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetCurrencyById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetDefaultTransactionTypes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="PROC_GetEventById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetEventsByAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetIconByCode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="code" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetIconById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetPersonalTransactionTypesByAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetTransactionById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetTransactionsByWallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="walletId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetTransactionsIdByWallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="walletId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetTransactionTypeById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetTransactionTypesByAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetWalletById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_GetWalletsByAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_LoginAccountIn" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="username" Type="varchar" Mode="In" />
+    <Parameter Name="password" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_UpdateAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="password" Type="varchar" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="phone" Type="varchar" Mode="In" />
+    <Parameter Name="email" Type="varchar" Mode="In" />
+    <Parameter Name="birth" Type="date" Mode="In" />
+  </Function>
+  <Function Name="PROC_UpdateAcquaintance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="accountId" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_UpdateAcquaintance_Transaction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="acquaintanceId" Type="int" Mode="In" />
+    <Parameter Name="transactionId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_UpdateCurrency" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="code" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_UpdateEvent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="accountId" Type="int" Mode="In" />
+    <Parameter Name="iconId" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="expiredDate" Type="date" Mode="In" />
+  </Function>
+  <Function Name="PROC_UpdateIcon" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="code" Type="varchar" Mode="In" />
+    <Parameter Name="imageUrl" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="PROC_UpdateTransaction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="walletId" Type="int" Mode="In" />
+    <Parameter Name="typeId" Type="int" Mode="In" />
+    <Parameter Name="eventId" Type="int" Mode="In" />
+    <Parameter Name="amount" Type="int" Mode="In" />
+    <Parameter Name="note" Type="nvarchar" Mode="In" />
+    <Parameter Name="date" Type="date" Mode="In" />
+  </Function>
+  <Function Name="PROC_UpdateTransactionType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="iconId" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="isExpense" Type="int" Mode="In" />
+  </Function>
+  <Function Name="PROC_UpdateWallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="currencyId" Type="int" Mode="In" />
+    <Parameter Name="accountId" Type="int" Mode="In" />
+    <Parameter Name="iconId" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="balance" Type="int" Mode="In" />
+  </Function>
+  <EntityContainer Name="MoneyBookApiModelStoreContainer">
+    <EntitySet Name="Accounts" EntityType="Self.Accounts" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Acquaintance_Transaction" EntityType="Self.Acquaintance_Transaction" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Acquaintances" EntityType="Self.Acquaintances" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Currencies" EntityType="Self.Currencies" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Icons" EntityType="Self.Icons" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TransactionTypes" EntityType="Self.TransactionTypes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Wallets" EntityType="Self.Wallets" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Acquaintance_Transaction_Acquaintance" Association="Self.FK_Acquaintance_Transaction_Acquaintance">
+      <End Role="Acquaintances" EntitySet="Acquaintances" />
+      <End Role="Acquaintance_Transaction" EntitySet="Acquaintance_Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Acquaintance_Transaction_Transaction" Association="Self.FK_Acquaintance_Transaction_Transaction">
+      <End Role="Transactions" EntitySet="Transactions" />
+      <End Role="Acquaintance_Transaction" EntitySet="Acquaintance_Transaction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Acquaintances_Account" Association="Self.FK_Acquaintances_Account">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="Acquaintances" EntitySet="Acquaintances" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Events_Account" Association="Self.FK_Events_Account">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="Events" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Events_Icon" Association="Self.FK_Events_Icon">
+      <End Role="Icons" EntitySet="Icons" />
+      <End Role="Events" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Transactions_Event" Association="Self.FK_Transactions_Event">
+      <End Role="Events" EntitySet="Events" />
+      <End Role="Transactions" EntitySet="Transactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Transactions_Type" Association="Self.FK_Transactions_Type">
+      <End Role="TransactionTypes" EntitySet="TransactionTypes" />
+      <End Role="Transactions" EntitySet="Transactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Transactions_Wallet" Association="Self.FK_Transactions_Wallet">
+      <End Role="Wallets" EntitySet="Wallets" />
+      <End Role="Transactions" EntitySet="Transactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TransactionTypes_Account" Association="Self.FK_TransactionTypes_Account">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="TransactionTypes" EntitySet="TransactionTypes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TransactionTypes_Icon" Association="Self.FK_TransactionTypes_Icon">
+      <End Role="Icons" EntitySet="Icons" />
+      <End Role="TransactionTypes" EntitySet="TransactionTypes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Wallets_Account" Association="Self.FK_Wallets_Account">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="Wallets" EntitySet="Wallets" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Wallets_Currency" Association="Self.FK_Wallets_Currency">
+      <End Role="Currencies" EntitySet="Currencies" />
+      <End Role="Wallets" EntitySet="Wallets" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Wallets_Icon" Association="Self.FK_Wallets_Icon">
+      <End Role="Icons" EntitySet="Icons" />
+      <End Role="Wallets" EntitySet="Wallets" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="MoneyBookApiEntities-Web.config Connection String" description="MoneyBookApiEntities Connection String used in web.config by the application to access the database." defaultValue="metadata=res://*/Database.Model.csdl|res://*/Database.Model.ssdl|res://*/Database.Model.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=DESKTOP-103NKUQ\SQLEXPRESS;initial catalog=MONEY_BOOK_API;user id=hennv;password=password;MultipleActiveResultSets=True;App=EntityFramework&quot;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\HEN\\source\\repos\\MoneyBookAPI\\MoneyBookAPI\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='MoneyBookApiEntities']/@connectionString" />
+  </parameter>
+</parameters>
