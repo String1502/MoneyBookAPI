@@ -13,7 +13,7 @@ namespace MoneyBookAPI.DTOs
         public string Name { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public DateTime Birth { get; set; }
+        public DateTime? Birth { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Modified { get; set; }
         public bool IsDeleted { get; set; }
