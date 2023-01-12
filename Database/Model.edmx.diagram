@@ -9,24 +9,24 @@
         <EntityTypeShape EntityType="MoneyBookApiModel.Acquaintance_Transaction" Width="1.5" PointX="5.25" PointY="8.625" IsExpanded="true" />
         <EntityTypeShape EntityType="MoneyBookApiModel.Acquaintance" Width="1.5" PointX="3" PointY="8.625" IsExpanded="true" />
         <EntityTypeShape EntityType="MoneyBookApiModel.Currency" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MoneyBookApiModel.Event" Width="1.5" PointX="3" PointY="4.375" IsExpanded="true" />
         <EntityTypeShape EntityType="MoneyBookApiModel.Icon" Width="1.5" PointX="0.75" PointY="3.5" IsExpanded="true" />
         <EntityTypeShape EntityType="MoneyBookApiModel.Transaction" Width="1.5" PointX="8.25" PointY="8.125" IsExpanded="true" />
         <EntityTypeShape EntityType="MoneyBookApiModel.TransactionType" Width="1.5" PointX="3" PointY="12.125" IsExpanded="true" />
         <EntityTypeShape EntityType="MoneyBookApiModel.Wallet" Width="1.5" PointX="6" PointY="4.125" IsExpanded="true" />
         <AssociationConnector Association="MoneyBookApiModel.FK_Acquaintances_Account" ManuallyRouted="false" />
-        <AssociationConnector Association="MoneyBookApiModel.FK_Events_Account" ManuallyRouted="false" />
         <AssociationConnector Association="MoneyBookApiModel.FK_TransactionTypes_Account" ManuallyRouted="false" />
         <AssociationConnector Association="MoneyBookApiModel.FK_Wallets_Account" ManuallyRouted="false" />
         <AssociationConnector Association="MoneyBookApiModel.FK_Acquaintance_Transaction_Acquaintance" ManuallyRouted="false" />
         <AssociationConnector Association="MoneyBookApiModel.FK_Acquaintance_Transaction_Transaction" ManuallyRouted="false" />
         <AssociationConnector Association="MoneyBookApiModel.FK_Wallets_Currency" ManuallyRouted="false" />
-        <AssociationConnector Association="MoneyBookApiModel.FK_Events_Icon" ManuallyRouted="false" />
-        <AssociationConnector Association="MoneyBookApiModel.FK_Transactions_Event" ManuallyRouted="false" />
         <AssociationConnector Association="MoneyBookApiModel.FK_TransactionTypes_Icon" ManuallyRouted="false" />
         <AssociationConnector Association="MoneyBookApiModel.FK_Wallets_Icon" ManuallyRouted="false" />
         <AssociationConnector Association="MoneyBookApiModel.FK_Transactions_Type" ManuallyRouted="false" />
         <AssociationConnector Association="MoneyBookApiModel.FK_Transactions_Wallet" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MoneyBookApiModel.Event" Width="1.5" PointX="3" PointY="4" />
+        <AssociationConnector Association="MoneyBookApiModel.FK_Events_Account" />
+        <AssociationConnector Association="MoneyBookApiModel.FK_Events_Icon" />
+        <AssociationConnector Association="MoneyBookApiModel.FK_Transactions_Event" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

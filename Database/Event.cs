@@ -28,6 +28,7 @@ namespace MoneyBookAPI.Database
         public Nullable<System.DateTime> Created { get; set; }
         public Nullable<System.DateTime> Modified { get; set; }
         public Nullable<int> IsDeleted { get; set; }
+        public Nullable<bool> IsActive { get; set; }
     
         public virtual Account Account { get; set; }
         public virtual Icon Icon { get; set; }

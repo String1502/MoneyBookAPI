@@ -1272,6 +1272,19 @@ namespace MoneyBookAPI.Controllers
 
         #endregion
 
+        // POST api/ServiceController/UpdateEventsStatus
+        [Route("api/ServiceController/UpdateEventsStatus")]
+        [HttpPost]
+        public IHttpActionResult UpdateEventsStatus()
+        {
+            using (var ctx = new MoneyBookApiEntities())
+            {
+                ctx.PROC_UpdateEventStatus();
+            }
+
+            return Ok();
+        }
+
         #region GET
 
         // GET api/ServiceController/GetAllEvents

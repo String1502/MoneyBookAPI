@@ -60,6 +60,7 @@
     <Property Name="Created" Type="datetime2" Precision="3" />
     <Property Name="Modified" Type="datetime2" Precision="3" />
     <Property Name="IsDeleted" Type="int" />
+    <Property Name="IsActive" Type="bit" />
   </EntityType>
   <EntityType Name="Icons">
     <Key>
@@ -469,6 +470,7 @@
     <Parameter Name="name" Type="nvarchar" Mode="In" />
     <Parameter Name="expiredDate" Type="date" Mode="In" />
   </Function>
+  <Function Name="PROC_UpdateEventStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="PROC_UpdateIcon" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="id" Type="int" Mode="In" />
     <Parameter Name="name" Type="nvarchar" Mode="In" />

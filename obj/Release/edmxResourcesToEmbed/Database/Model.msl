@@ -53,20 +53,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Events">
-      <EntityTypeMapping TypeName="MoneyBookApiModel.Event">
-        <MappingFragment StoreEntitySet="Events">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-          <ScalarProperty Name="IconId" ColumnName="IconId" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ExpiredDate" ColumnName="ExpiredDate" />
-          <ScalarProperty Name="Created" ColumnName="Created" />
-          <ScalarProperty Name="Modified" ColumnName="Modified" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Icons">
       <EntityTypeMapping TypeName="MoneyBookApiModel.Icon">
         <MappingFragment StoreEntitySet="Icons">
@@ -275,20 +261,6 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Code" ColumnName="Code" />
-          <ScalarProperty Name="Created" ColumnName="Created" />
-          <ScalarProperty Name="Modified" ColumnName="Modified" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="PROC_GetAllEvents" FunctionName="MoneyBookApiModel.Store.PROC_GetAllEvents">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="MoneyBookApiModel.PROC_GetAllEvents_Result">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-          <ScalarProperty Name="IconId" ColumnName="IconId" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ExpiredDate" ColumnName="ExpiredDate" />
           <ScalarProperty Name="Created" ColumnName="Created" />
           <ScalarProperty Name="Modified" ColumnName="Modified" />
           <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
@@ -586,5 +558,36 @@
     <FunctionImportMapping FunctionImportName="PROC_UpdateTransaction" FunctionName="MoneyBookApiModel.Store.PROC_UpdateTransaction" />
     <FunctionImportMapping FunctionImportName="PROC_UpdateTransactionType" FunctionName="MoneyBookApiModel.Store.PROC_UpdateTransactionType" />
     <FunctionImportMapping FunctionImportName="PROC_UpdateWallet" FunctionName="MoneyBookApiModel.Store.PROC_UpdateWallet" />
+    <EntitySetMapping Name="Events">
+      <EntityTypeMapping TypeName="MoneyBookApiModel.Event">
+        <MappingFragment StoreEntitySet="Events">
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Modified" ColumnName="Modified" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="ExpiredDate" ColumnName="ExpiredDate" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="IconId" ColumnName="IconId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="PROC_GetAllEvents" FunctionName="MoneyBookApiModel.Store.PROC_GetAllEvents">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="MoneyBookApiModel.PROC_GetAllEvents_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="IconId" ColumnName="IconId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ExpiredDate" ColumnName="ExpiredDate" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Modified" ColumnName="Modified" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="PROC_UpdateEventStatus" FunctionName="MoneyBookApiModel.Store.PROC_UpdateEventStatus" />
   </EntityContainerMapping>
 </Mapping>

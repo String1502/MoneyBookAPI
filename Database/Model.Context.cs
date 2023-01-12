@@ -31,11 +31,11 @@ namespace MoneyBookAPI.Database
         public virtual DbSet<Acquaintance_Transaction> Acquaintance_Transaction { get; set; }
         public virtual DbSet<Acquaintance> Acquaintances { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
-        public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Icon> Icons { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<TransactionType> TransactionTypes { get; set; }
         public virtual DbSet<Wallet> Wallets { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
     
         public virtual int PROC_CreateAccount(string username, string password, string name, string phone, string email, Nullable<System.DateTime> birth)
         {
@@ -411,11 +411,6 @@ namespace MoneyBookAPI.Database
         public virtual ObjectResult<PROC_GetAllCurrencies_Result> PROC_GetAllCurrencies()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PROC_GetAllCurrencies_Result>("PROC_GetAllCurrencies");
-        }
-    
-        public virtual ObjectResult<PROC_GetAllEvents_Result> PROC_GetAllEvents()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PROC_GetAllEvents_Result>("PROC_GetAllEvents");
         }
     
         public virtual ObjectResult<PROC_GetAllIcons_Result> PROC_GetAllIcons()
@@ -794,6 +789,16 @@ namespace MoneyBookAPI.Database
                 new ObjectParameter("balance", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PROC_UpdateWallet", idParameter, currencyIdParameter, accountIdParameter, iconIdParameter, nameParameter, balanceParameter);
+        }
+    
+        public virtual ObjectResult<PROC_GetAllEvents_Result> PROC_GetAllEvents()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PROC_GetAllEvents_Result>("PROC_GetAllEvents");
+        }
+    
+        public virtual int PROC_UpdateEventStatus()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PROC_UpdateEventStatus");
         }
     }
 }

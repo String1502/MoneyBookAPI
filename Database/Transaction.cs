@@ -33,8 +33,8 @@ namespace MoneyBookAPI.Database
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Acquaintance_Transaction> Acquaintance_Transaction { get; set; }
-        public virtual Event Event { get; set; }
         public virtual TransactionType TransactionType { get; set; }
         public virtual Wallet Wallet { get; set; }
+        public virtual Event Event { get; set; }
     }
 }

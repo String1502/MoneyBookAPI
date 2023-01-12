@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MoneyBookApiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MoneyBookApiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Accounts">
           <Key>
             <PropertyRef Name="Id" />
@@ -65,6 +65,7 @@
           <Property Name="Created" Type="datetime2" Precision="3" />
           <Property Name="Modified" Type="datetime2" Precision="3" />
           <Property Name="IsDeleted" Type="int" />
+          <Property Name="IsActive" Type="bit" />
         </EntityType>
         <EntityType Name="Icons">
           <Key>
@@ -474,6 +475,7 @@
           <Parameter Name="name" Type="nvarchar" Mode="In" />
           <Parameter Name="expiredDate" Type="date" Mode="In" />
         </Function>
+        <Function Name="PROC_UpdateEventStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="PROC_UpdateIcon" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
           <Parameter Name="name" Type="nvarchar" Mode="In" />
@@ -566,8 +568,7 @@
             <End Role="Wallets" EntitySet="Wallets" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MoneyBookApiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -586,9 +587,9 @@
           <Property Name="Modified" Type="DateTime" Precision="3" />
           <Property Name="IsDeleted" Type="Int32" />
           <NavigationProperty Name="Acquaintances" Relationship="Self.FK_Acquaintances_Account" FromRole="Accounts" ToRole="Acquaintances" />
-          <NavigationProperty Name="Events" Relationship="Self.FK_Events_Account" FromRole="Accounts" ToRole="Events" />
           <NavigationProperty Name="TransactionTypes" Relationship="Self.FK_TransactionTypes_Account" FromRole="Accounts" ToRole="TransactionTypes" />
           <NavigationProperty Name="Wallets" Relationship="Self.FK_Wallets_Account" FromRole="Accounts" ToRole="Wallets" />
+          <NavigationProperty Name="Events" Relationship="MoneyBookApiModel.FK_Events_Account" FromRole="Account" ToRole="Event" />
         </EntityType>
         <EntityType Name="Acquaintance_Transaction">
           <Key>
@@ -628,22 +629,6 @@
           <Property Name="IsDeleted" Type="Int32" />
           <NavigationProperty Name="Wallets" Relationship="Self.FK_Wallets_Currency" FromRole="Currencies" ToRole="Wallets" />
         </EntityType>
-        <EntityType Name="Event">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AccountId" Type="Int32" />
-          <Property Name="IconId" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="ExpiredDate" Type="DateTime" Precision="0" />
-          <Property Name="Created" Type="DateTime" Precision="3" />
-          <Property Name="Modified" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Int32" />
-          <NavigationProperty Name="Account" Relationship="Self.FK_Events_Account" FromRole="Events" ToRole="Accounts" />
-          <NavigationProperty Name="Icon" Relationship="Self.FK_Events_Icon" FromRole="Events" ToRole="Icons" />
-          <NavigationProperty Name="Transactions" Relationship="Self.FK_Transactions_Event" FromRole="Events" ToRole="Transactions" />
-        </EntityType>
         <EntityType Name="Icon">
           <Key>
             <PropertyRef Name="Id" />
@@ -655,9 +640,9 @@
           <Property Name="Created" Type="DateTime" Precision="3" />
           <Property Name="Modified" Type="DateTime" Precision="3" />
           <Property Name="IsDeleted" Type="Int32" />
-          <NavigationProperty Name="Events" Relationship="Self.FK_Events_Icon" FromRole="Icons" ToRole="Events" />
           <NavigationProperty Name="TransactionTypes" Relationship="Self.FK_TransactionTypes_Icon" FromRole="Icons" ToRole="TransactionTypes" />
           <NavigationProperty Name="Wallets" Relationship="Self.FK_Wallets_Icon" FromRole="Icons" ToRole="Wallets" />
+          <NavigationProperty Name="Events" Relationship="MoneyBookApiModel.FK_Events_Icon" FromRole="Icon" ToRole="Event" />
         </EntityType>
         <EntityType Name="Transaction">
           <Key>
@@ -674,9 +659,9 @@
           <Property Name="Modified" Type="DateTime" Precision="3" />
           <Property Name="IsDeleted" Type="Int32" />
           <NavigationProperty Name="Acquaintance_Transaction" Relationship="Self.FK_Acquaintance_Transaction_Transaction" FromRole="Transactions" ToRole="Acquaintance_Transaction" />
-          <NavigationProperty Name="Event" Relationship="Self.FK_Transactions_Event" FromRole="Transactions" ToRole="Events" />
           <NavigationProperty Name="TransactionType" Relationship="Self.FK_Transactions_Type" FromRole="Transactions" ToRole="TransactionTypes" />
           <NavigationProperty Name="Wallet" Relationship="Self.FK_Transactions_Wallet" FromRole="Transactions" ToRole="Wallets" />
+          <NavigationProperty Name="Event" Relationship="MoneyBookApiModel.FK_Transactions_Event" FromRole="Transaction" ToRole="Event" />
         </EntityType>
         <EntityType Name="TransactionType">
           <Key>
@@ -722,18 +707,6 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Acquaintances">
-              <PropertyRef Name="AccountId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Events_Account">
-          <End Role="Accounts" Type="Self.Account" Multiplicity="0..1" />
-          <End Role="Events" Type="Self.Event" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Accounts">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Events">
               <PropertyRef Name="AccountId" />
             </Dependent>
           </ReferentialConstraint>
@@ -798,30 +771,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Events_Icon">
-          <End Role="Icons" Type="Self.Icon" Multiplicity="0..1" />
-          <End Role="Events" Type="Self.Event" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Icons">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Events">
-              <PropertyRef Name="IconId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Transactions_Event">
-          <End Role="Events" Type="Self.Event" Multiplicity="0..1" />
-          <End Role="Transactions" Type="Self.Transaction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Events">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Transactions">
-              <PropertyRef Name="EventId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TransactionTypes_Icon">
           <End Role="Icons" Type="Self.Icon" Multiplicity="0..1" />
           <End Role="TransactionTypes" Type="Self.TransactionType" Multiplicity="*" />
@@ -875,7 +824,6 @@
           <EntitySet Name="Acquaintance_Transaction" EntityType="Self.Acquaintance_Transaction" />
           <EntitySet Name="Acquaintances" EntityType="Self.Acquaintance" />
           <EntitySet Name="Currencies" EntityType="Self.Currency" />
-          <EntitySet Name="Events" EntityType="Self.Event" />
           <EntitySet Name="Icons" EntityType="Self.Icon" />
           <EntitySet Name="Transactions" EntityType="Self.Transaction" />
           <EntitySet Name="TransactionTypes" EntityType="Self.TransactionType" />
@@ -883,10 +831,6 @@
           <AssociationSet Name="FK_Acquaintances_Account" Association="Self.FK_Acquaintances_Account">
             <End Role="Accounts" EntitySet="Accounts" />
             <End Role="Acquaintances" EntitySet="Acquaintances" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Events_Account" Association="Self.FK_Events_Account">
-            <End Role="Accounts" EntitySet="Accounts" />
-            <End Role="Events" EntitySet="Events" />
           </AssociationSet>
           <AssociationSet Name="FK_TransactionTypes_Account" Association="Self.FK_TransactionTypes_Account">
             <End Role="Accounts" EntitySet="Accounts" />
@@ -907,14 +851,6 @@
           <AssociationSet Name="FK_Wallets_Currency" Association="Self.FK_Wallets_Currency">
             <End Role="Currencies" EntitySet="Currencies" />
             <End Role="Wallets" EntitySet="Wallets" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Events_Icon" Association="Self.FK_Events_Icon">
-            <End Role="Icons" EntitySet="Icons" />
-            <End Role="Events" EntitySet="Events" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Transactions_Event" Association="Self.FK_Transactions_Event">
-            <End Role="Events" EntitySet="Events" />
-            <End Role="Transactions" EntitySet="Transactions" />
           </AssociationSet>
           <AssociationSet Name="FK_TransactionTypes_Icon" Association="Self.FK_TransactionTypes_Icon">
             <End Role="Icons" EntitySet="Icons" />
@@ -987,112 +923,111 @@
             <Parameter Name="balance" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteAccount">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteAcquaintance">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteAcquaintance_Transaction">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteAcquaintance_Transaction_All">
-            <Parameter Name="transactionId" Mode="In" Type="Int32" />
+          <Parameter Name="transactionId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteCurrency">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteEvent">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteIcon">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteTransaction">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteTransactionAll">
-            <Parameter Name="walletId" Mode="In" Type="Int32" />
+          <Parameter Name="walletId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteTransactionTypes">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_DeleteWallet">
-            <Parameter Name="walletId" Mode="In" Type="Int32" />
+          <Parameter Name="walletId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetAccountById" ReturnType="Collection(MoneyBookApiModel.PROC_GetAccountById_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetAccountByUsername" ReturnType="Collection(MoneyBookApiModel.PROC_GetAccountByUsername_Result)">
-            <Parameter Name="username" Mode="In" Type="String" />
+          <Parameter Name="username" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetAcquaintance_TransactionById" ReturnType="Collection(MoneyBookApiModel.PROC_GetAcquaintance_TransactionById_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetAcquaintance_TransactionByTransactionId" ReturnType="Collection(MoneyBookApiModel.PROC_GetAcquaintance_TransactionByTransactionId_Result)">
-            <Parameter Name="transactionId" Mode="In" Type="Int32" />
+          <Parameter Name="transactionId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetAcquaintance_TransactionIdByTransactionId" ReturnType="Collection(Int32)">
-            <Parameter Name="transactionId" Mode="In" Type="Int32" />
+          <Parameter Name="transactionId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetAcquaintanceById" ReturnType="Collection(MoneyBookApiModel.PROC_GetAcquaintanceById_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetAcquaintancesByAccount" ReturnType="Collection(MoneyBookApiModel.PROC_GetAcquaintancesByAccount_Result)">
-            <Parameter Name="accountId" Mode="In" Type="Int32" />
+          <Parameter Name="accountId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetAllAccounts" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllAccounts_Result)" />
           <FunctionImport Name="PROC_GetAllAcquaintance_Transaction" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllAcquaintance_Transaction_Result)" />
           <FunctionImport Name="PROC_GetAllAcquaintance_TransactionId" ReturnType="Collection(Int32)" />
           <FunctionImport Name="PROC_GetAllAcquaintances" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllAcquaintances_Result)" />
           <FunctionImport Name="PROC_GetAllCurrencies" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllCurrencies_Result)" />
-          <FunctionImport Name="PROC_GetAllEvents" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllEvents_Result)" />
           <FunctionImport Name="PROC_GetAllIcons" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllIcons_Result)" />
           <FunctionImport Name="PROC_GetAllTransactions" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllTransactions_Result)" />
           <FunctionImport Name="PROC_GetAllTransactionsId" ReturnType="Collection(Int32)" />
           <FunctionImport Name="PROC_GetAllTransactionTypes" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllTransactionTypes_Result)" />
           <FunctionImport Name="PROC_GetAllWallets" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllWallets_Result)" />
           <FunctionImport Name="PROC_GetCurrencyByCode" ReturnType="Collection(MoneyBookApiModel.PROC_GetCurrencyByCode_Result)">
-            <Parameter Name="code" Mode="In" Type="String" />
+          <Parameter Name="code" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetCurrencyById" ReturnType="Collection(MoneyBookApiModel.PROC_GetCurrencyById_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetDefaultTransactionTypes" ReturnType="Collection(MoneyBookApiModel.PROC_GetDefaultTransactionTypes_Result)" />
           <FunctionImport Name="PROC_GetEventById" ReturnType="Collection(MoneyBookApiModel.PROC_GetEventById_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetEventsByAccount" ReturnType="Collection(MoneyBookApiModel.PROC_GetEventsByAccount_Result)">
-            <Parameter Name="accountId" Mode="In" Type="Int32" />
+          <Parameter Name="accountId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetIconByCode" ReturnType="Collection(MoneyBookApiModel.PROC_GetIconByCode_Result)">
-            <Parameter Name="code" Mode="In" Type="String" />
+          <Parameter Name="code" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetIconById" ReturnType="Collection(MoneyBookApiModel.PROC_GetIconById_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetPersonalTransactionTypesByAccount" ReturnType="Collection(MoneyBookApiModel.PROC_GetPersonalTransactionTypesByAccount_Result)">
-            <Parameter Name="accountId" Mode="In" Type="Int32" />
+          <Parameter Name="accountId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetTransactionById" ReturnType="Collection(MoneyBookApiModel.PROC_GetTransactionById_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetTransactionsByWallet" ReturnType="Collection(MoneyBookApiModel.PROC_GetTransactionsByWallet_Result)">
-            <Parameter Name="walletId" Mode="In" Type="Int32" />
+          <Parameter Name="walletId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetTransactionsIdByWallet" ReturnType="Collection(Int32)">
-            <Parameter Name="walletId" Mode="In" Type="Int32" />
+          <Parameter Name="walletId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetTransactionTypeById" ReturnType="Collection(MoneyBookApiModel.PROC_GetTransactionTypeById_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetTransactionTypesByAccount" ReturnType="Collection(MoneyBookApiModel.PROC_GetTransactionTypesByAccount_Result)">
-            <Parameter Name="accountId" Mode="In" Type="Int32" />
+          <Parameter Name="accountId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetWalletById" ReturnType="Collection(MoneyBookApiModel.PROC_GetWalletById_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_GetWalletsByAccount" ReturnType="Collection(MoneyBookApiModel.PROC_GetWalletsByAccount_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="PROC_LoginAccountIn" ReturnType="Collection(MoneyBookApiModel.PROC_LoginAccountIn_Result)">
             <Parameter Name="username" Mode="In" Type="String" />
@@ -1157,6 +1092,21 @@
             <Parameter Name="name" Mode="In" Type="String" />
             <Parameter Name="balance" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Events" EntityType="MoneyBookApiModel.Event" />
+          <AssociationSet Name="FK_Events_Account" Association="MoneyBookApiModel.FK_Events_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Events_Icon" Association="MoneyBookApiModel.FK_Events_Icon">
+            <End Role="Icon" EntitySet="Icons" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transactions_Event" Association="MoneyBookApiModel.FK_Transactions_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+          <FunctionImport Name="PROC_GetAllEvents" ReturnType="Collection(MoneyBookApiModel.PROC_GetAllEvents_Result)" />
+          <FunctionImport Name="PROC_UpdateEventStatus" />
         </EntityContainer>
         <ComplexType Name="PROC_GetAccountById_Result">
           <Property Type="Int32" Name="Id" Nullable="false" />
@@ -1246,16 +1196,6 @@
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
           <Property Type="String" Name="Code" Nullable="true" MaxLength="16" />
-          <Property Type="DateTime" Name="Created" Nullable="true" />
-          <Property Type="DateTime" Name="Modified" Nullable="true" />
-          <Property Type="Int32" Name="IsDeleted" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="PROC_GetAllEvents_Result">
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="AccountId" Nullable="true" />
-          <Property Type="Int32" Name="IconId" Nullable="true" />
-          <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
-          <Property Type="DateTime" Name="ExpiredDate" Nullable="true" />
           <Property Type="DateTime" Name="Created" Nullable="true" />
           <Property Type="DateTime" Name="Modified" Nullable="true" />
           <Property Type="Int32" Name="IsDeleted" Nullable="true" />
@@ -1464,6 +1404,70 @@
           <Property Type="DateTime" Name="Modified" Nullable="true" />
           <Property Type="Int32" Name="IsDeleted" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int32" />
+          <Property Name="IconId" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ExpiredDate" Type="DateTime" Precision="0" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="Modified" Type="DateTime" Precision="3" />
+          <Property Name="IsDeleted" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <NavigationProperty Name="Account" Relationship="MoneyBookApiModel.FK_Events_Account" FromRole="Event" ToRole="Account" />
+          <NavigationProperty Name="Icon" Relationship="MoneyBookApiModel.FK_Events_Icon" FromRole="Event" ToRole="Icon" />
+          <NavigationProperty Name="Transactions" Relationship="MoneyBookApiModel.FK_Transactions_Event" FromRole="Event" ToRole="Transaction" />
+        </EntityType>
+        <Association Name="FK_Events_Account">
+          <End Type="MoneyBookApiModel.Account" Role="Account" Multiplicity="0..1" />
+          <End Type="MoneyBookApiModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Events_Icon">
+          <End Type="MoneyBookApiModel.Icon" Role="Icon" Multiplicity="0..1" />
+          <End Type="MoneyBookApiModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Icon">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="IconId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transactions_Event">
+          <End Type="MoneyBookApiModel.Event" Role="Event" Multiplicity="0..1" />
+          <End Type="MoneyBookApiModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="PROC_GetAllEvents_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="AccountId" Nullable="true" />
+          <Property Type="Int32" Name="IconId" Nullable="true" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="ExpiredDate" Nullable="true" />
+          <Property Type="DateTime" Name="Created" Nullable="true" />
+          <Property Type="DateTime" Name="Modified" Nullable="true" />
+          <Property Type="Int32" Name="IsDeleted" Nullable="true" />
+          <Property Type="Boolean" Name="IsActive" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1516,20 +1520,6 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="Created" ColumnName="Created" />
-                <ScalarProperty Name="Modified" ColumnName="Modified" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Events">
-            <EntityTypeMapping TypeName="MoneyBookApiModel.Event">
-              <MappingFragment StoreEntitySet="Events">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-                <ScalarProperty Name="IconId" ColumnName="IconId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ExpiredDate" ColumnName="ExpiredDate" />
                 <ScalarProperty Name="Created" ColumnName="Created" />
                 <ScalarProperty Name="Modified" ColumnName="Modified" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
@@ -1744,20 +1734,6 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="Created" ColumnName="Created" />
-                <ScalarProperty Name="Modified" ColumnName="Modified" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="PROC_GetAllEvents" FunctionName="MoneyBookApiModel.Store.PROC_GetAllEvents">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="MoneyBookApiModel.PROC_GetAllEvents_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-                <ScalarProperty Name="IconId" ColumnName="IconId" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ExpiredDate" ColumnName="ExpiredDate" />
                 <ScalarProperty Name="Created" ColumnName="Created" />
                 <ScalarProperty Name="Modified" ColumnName="Modified" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
@@ -2055,6 +2031,37 @@
           <FunctionImportMapping FunctionImportName="PROC_UpdateTransaction" FunctionName="MoneyBookApiModel.Store.PROC_UpdateTransaction" />
           <FunctionImportMapping FunctionImportName="PROC_UpdateTransactionType" FunctionName="MoneyBookApiModel.Store.PROC_UpdateTransactionType" />
           <FunctionImportMapping FunctionImportName="PROC_UpdateWallet" FunctionName="MoneyBookApiModel.Store.PROC_UpdateWallet" />
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="MoneyBookApiModel.Event">
+              <MappingFragment StoreEntitySet="Events">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="ExpiredDate" ColumnName="ExpiredDate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IconId" ColumnName="IconId" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="PROC_GetAllEvents" FunctionName="MoneyBookApiModel.Store.PROC_GetAllEvents">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MoneyBookApiModel.PROC_GetAllEvents_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="IconId" ColumnName="IconId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ExpiredDate" ColumnName="ExpiredDate" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="PROC_UpdateEventStatus" FunctionName="MoneyBookApiModel.Store.PROC_UpdateEventStatus" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

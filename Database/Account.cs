@@ -18,9 +18,9 @@ namespace MoneyBookAPI.Database
         public Account()
         {
             this.Acquaintances = new HashSet<Acquaintance>();
-            this.Events = new HashSet<Event>();
             this.TransactionTypes = new HashSet<TransactionType>();
             this.Wallets = new HashSet<Wallet>();
+            this.Events = new HashSet<Event>();
         }
     
         public int Id { get; set; }
@@ -37,10 +37,10 @@ namespace MoneyBookAPI.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Acquaintance> Acquaintances { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Event> Events { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TransactionType> TransactionTypes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Wallet> Wallets { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Event> Events { get; set; }
     }
 }
